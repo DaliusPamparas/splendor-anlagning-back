@@ -86,3 +86,14 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Strapi specific
+build/
+.tmp/
+public/uploads/
+.strapi-updater.json
+
+# For SQLite if it's ever placed outside .tmp/ by custom config
+# *.db
+# *.sqlite
+# *.sqlite3
