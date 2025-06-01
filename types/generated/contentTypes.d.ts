@@ -362,6 +362,48 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiMachineryMachinery extends Schema.CollectionType {
+  collectionName: 'machineries';
+  info: {
+    description: '';
+    displayName: 'Machinery';
+    pluralName: 'machineries';
+    singularName: 'machinery';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::machinery.machinery',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    name: Attribute.String & Attribute.Required;
+    publishedAt: Attribute.DateTime;
+    qrId: Attribute.String &
+      Attribute.Required &
+      Attribute.Private &
+      Attribute.Unique;
+    status: Attribute.String;
+    type: Attribute.String & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::machinery.machinery',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    users_permissions_users: Attribute.Relation<
+      'api::machinery.machinery',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface PluginContentReleasesRelease extends Schema.CollectionType {
   collectionName: 'strapi_releases';
   info: {
@@ -760,6 +802,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    machinery: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::machinery.machinery'
+    >;
     password: Attribute.Password &
       Attribute.Private &
       Attribute.SetMinMaxLength<{
@@ -798,6 +845,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::machinery.machinery': ApiMachineryMachinery;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

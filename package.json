@@ -17,10 +17,12 @@
     "@strapi/plugin-users-permissions": "4.25.22",
     "@strapi/strapi": "4.25.22",
     "better-sqlite3": "8.6.0",
+    "qr-code-styling": "^1.9.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "5.3.4",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.3",
+    "uuid": "^11.1.0"
   },
   "author": {
     "name": "A Strapi developer"
@@ -33,5 +35,8 @@
     "npm": ">=6.0.0"
   },
   "license": "MIT",
-  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
+  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
 }
