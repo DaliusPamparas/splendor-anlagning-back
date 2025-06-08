@@ -66,10 +66,10 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "machinery": {
+    "machines": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::machinery.machinery",
+      "target": "api::machine.machine",
       "mappedBy": "users_permissions_users"
     }
   }

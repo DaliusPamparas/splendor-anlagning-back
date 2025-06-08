@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * machinery router
+ * machine router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::machinery.machinery');
+module.exports = createCoreRouter('api::machine.machine');

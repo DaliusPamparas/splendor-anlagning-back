@@ -362,13 +362,12 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiMachineryMachinery extends Schema.CollectionType {
-  collectionName: 'machineries';
+export interface ApiMachineMachine extends Schema.CollectionType {
+  collectionName: 'machines';
   info: {
-    description: '';
-    displayName: 'Machinery';
-    pluralName: 'machineries';
-    singularName: 'machinery';
+    displayName: 'Machine';
+    pluralName: 'machines';
+    singularName: 'machine';
   };
   options: {
     draftAndPublish: true;
@@ -376,28 +375,25 @@ export interface ApiMachineryMachinery extends Schema.CollectionType {
   attributes: {
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::machinery.machinery',
+      'api::machine.machine',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
-    name: Attribute.String & Attribute.Required;
+    name: Attribute.String;
     publishedAt: Attribute.DateTime;
-    qrId: Attribute.String &
-      Attribute.Required &
-      Attribute.Private &
-      Attribute.Unique;
+    qrid: Attribute.String;
     status: Attribute.String;
-    type: Attribute.String & Attribute.Required;
+    type: Attribute.String;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
-      'api::machinery.machinery',
+      'api::machine.machine',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     users_permissions_users: Attribute.Relation<
-      'api::machinery.machinery',
+      'api::machine.machine',
       'manyToMany',
       'plugin::users-permissions.user'
     >;
@@ -802,10 +798,10 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    machinery: Attribute.Relation<
+    machines: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToMany',
-      'api::machinery.machinery'
+      'api::machine.machine'
     >;
     password: Attribute.Password &
       Attribute.Private &
@@ -845,7 +841,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::machinery.machinery': ApiMachineryMachinery;
+      'api::machine.machine': ApiMachineMachine;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

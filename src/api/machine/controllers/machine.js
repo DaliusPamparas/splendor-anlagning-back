@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * machinery controller
+ * machine controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::machinery.machinery');
+module.exports = createCoreController('api::machine.machine');
