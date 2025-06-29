@@ -362,6 +362,70 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiIssueIssue extends Schema.CollectionType {
+  collectionName: 'issues';
+  info: {
+    description: 'Machine issues and maintenance requests';
+    displayName: 'Issue';
+    pluralName: 'issues';
+    singularName: 'issue';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    actual_hours: Attribute.Decimal;
+    assigned_to: Attribute.Relation<
+      'api::issue.issue',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    created_by: Attribute.Relation<
+      'api::issue.issue',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::issue.issue',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.Text & Attribute.Required;
+    estimated_hours: Attribute.Decimal;
+    machine: Attribute.Relation<
+      'api::issue.issue',
+      'manyToOne',
+      'api::machine.machine'
+    >;
+    priority: Attribute.Enumeration<
+      ['L\u00E5g', 'Medium', 'H\u00F6g', 'Kritisk']
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'Medium'>;
+    publishedAt: Attribute.DateTime;
+    solution: Attribute.Text;
+    status: Attribute.Enumeration<
+      ['\u00D6ppen', 'P\u00E5g\u00E5ende', 'L\u00F6st']
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'\u00D6ppen'>;
+    title: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::issue.issue',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiMachineMachine extends Schema.CollectionType {
   collectionName: 'machines';
   info: {
@@ -380,6 +444,11 @@ export interface ApiMachineMachine extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+    issues: Attribute.Relation<
+      'api::machine.machine',
+      'oneToMany',
+      'api::issue.issue'
+    >;
     name: Attribute.String;
     publishedAt: Attribute.DateTime;
     qrid: Attribute.String;
@@ -783,9 +852,19 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     timestamps: true;
   };
   attributes: {
+    assigned_issues: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::issue.issue'
+    >;
     blocked: Attribute.Boolean & Attribute.DefaultTo<false>;
     confirmationToken: Attribute.String & Attribute.Private;
     confirmed: Attribute.Boolean & Attribute.DefaultTo<false>;
+    created_issues: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::issue.issue'
+    >;
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'plugin::users-permissions.user',
@@ -841,6 +920,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

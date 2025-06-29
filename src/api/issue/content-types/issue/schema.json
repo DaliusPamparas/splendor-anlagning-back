@@ -1,0 +1,64 @@
+{
+  "kind": "collectionType",
+  "collectionName": "issues",
+  "info": {
+    "singularName": "issue",
+    "pluralName": "issues",
+    "displayName": "Issue",
+    "description": "Machine issues and maintenance requests"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["Öppen", "Pågående", "Löst"],
+      "default": "Öppen",
+      "required": true
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": ["Låg", "Medium", "Hög", "Kritisk"],
+      "default": "Medium",
+      "required": true
+    },
+    "solution": {
+      "type": "text"
+    },
+    "estimated_hours": {
+      "type": "decimal"
+    },
+    "actual_hours": {
+      "type": "decimal"
+    },
+    "machine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::machine.machine",
+      "inversedBy": "issues"
+    },
+    "created_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "created_issues"
+    },
+    "assigned_to": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "assigned_issues"
+    }
+  }
+} 

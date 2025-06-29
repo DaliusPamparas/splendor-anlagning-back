@@ -66,12 +66,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "machines": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::machine.machine",
-      "mappedBy": "users_permissions_users"
-    },
     "created_issues": {
       "type": "relation",
       "relation": "oneToMany",
@@ -85,4 +79,4 @@
       "mappedBy": "assigned_to"
     }
   }
-}
+} 

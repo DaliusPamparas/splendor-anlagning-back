@@ -28,6 +28,12 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "machines"
+    },
+    "issues": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::issue.issue",
+      "mappedBy": "machine"
     }
   }
 }
