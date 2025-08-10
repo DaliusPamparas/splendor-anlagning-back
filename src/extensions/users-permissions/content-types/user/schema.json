@@ -83,6 +83,10 @@
       "relation": "manyToMany",
       "target": "api::issue.issue",
       "mappedBy": "assigned_to"
+    },
+    "language": {
+      "type": "string",
+      "default": "sv"
     }
   }
 }

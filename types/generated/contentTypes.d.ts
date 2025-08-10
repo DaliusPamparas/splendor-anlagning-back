@@ -877,6 +877,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    language: Attribute.String & Attribute.DefaultTo<'sv'>;
     machines: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToMany',
