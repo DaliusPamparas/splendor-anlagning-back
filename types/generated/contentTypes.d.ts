@@ -362,6 +362,55 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiChecklistChecklist extends Schema.CollectionType {
+  collectionName: 'checklists';
+  info: {
+    description: 'Vehicle inspection and maintenance checklists';
+    displayName: 'Checklist';
+    pluralName: 'checklists';
+    singularName: 'checklist';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    assignedMachines: Attribute.Relation<
+      'api::checklist.checklist',
+      'manyToMany',
+      'api::machine.machine'
+    >;
+    assignedMachineTypes: Attribute.JSON;
+    created_by: Attribute.Relation<
+      'api::checklist.checklist',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::checklist.checklist',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.Text;
+    isDefault: Attribute.Boolean & Attribute.DefaultTo<false>;
+    items: Attribute.JSON & Attribute.Required;
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    publishedAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::checklist.checklist',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiIssueIssue extends Schema.CollectionType {
   collectionName: 'issues';
   info: {
@@ -921,6 +970,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::checklist.checklist': ApiChecklistChecklist;
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
       'plugin::content-releases.release': PluginContentReleasesRelease;
