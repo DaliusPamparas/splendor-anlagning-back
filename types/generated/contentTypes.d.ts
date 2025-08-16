@@ -362,10 +362,70 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiChecklistCompletionChecklistCompletion
+  extends Schema.CollectionType {
+  collectionName: 'checklist_completions';
+  info: {
+    description: 'Records of completed vehicle checklist inspections';
+    displayName: 'Checklist Completion';
+    pluralName: 'checklist-completions';
+    singularName: 'checklist-completion';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    checklist: Attribute.Relation<
+      'api::checklist-completion.checklist-completion',
+      'manyToOne',
+      'api::checklist.checklist'
+    >;
+    completedAt: Attribute.DateTime;
+    completedBy: Attribute.Relation<
+      'api::checklist-completion.checklist-completion',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    completedItems: Attribute.Integer &
+      Attribute.Required &
+      Attribute.DefaultTo<0>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::checklist-completion.checklist-completion',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    itemCompletions: Attribute.JSON & Attribute.Required;
+    machine: Attribute.Relation<
+      'api::checklist-completion.checklist-completion',
+      'manyToOne',
+      'api::machine.machine'
+    >;
+    notes: Attribute.Text;
+    problemsReported: Attribute.Integer &
+      Attribute.Required &
+      Attribute.DefaultTo<0>;
+    publishedAt: Attribute.DateTime;
+    startedAt: Attribute.DateTime & Attribute.Required;
+    status: Attribute.Enumeration<['started', 'completed', 'cancelled']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'started'>;
+    totalItems: Attribute.Integer & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::checklist-completion.checklist-completion',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiChecklistChecklist extends Schema.CollectionType {
   collectionName: 'checklists';
   info: {
-    description: 'Vehicle inspection and maintenance checklists';
+    description: 'Template checklists for vehicle inspections';
     displayName: 'Checklist';
     pluralName: 'checklists';
     singularName: 'checklist';
@@ -380,6 +440,11 @@ export interface ApiChecklistChecklist extends Schema.CollectionType {
       'api::machine.machine'
     >;
     assignedMachineTypes: Attribute.JSON;
+    completions: Attribute.Relation<
+      'api::checklist.checklist',
+      'oneToMany',
+      'api::checklist-completion.checklist-completion'
+    >;
     created_by: Attribute.Relation<
       'api::checklist.checklist',
       'oneToOne',
@@ -486,6 +551,16 @@ export interface ApiMachineMachine extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
+    checklistCompletions: Attribute.Relation<
+      'api::machine.machine',
+      'oneToMany',
+      'api::checklist-completion.checklist-completion'
+    >;
+    checklists: Attribute.Relation<
+      'api::machine.machine',
+      'manyToMany',
+      'api::checklist.checklist'
+    >;
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::machine.machine',
@@ -970,6 +1045,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::checklist-completion.checklist-completion': ApiChecklistCompletionChecklistCompletion;
       'api::checklist.checklist': ApiChecklistChecklist;
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;

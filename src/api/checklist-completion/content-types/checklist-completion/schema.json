@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "checklist_completions",
+  "info": {
+    "singularName": "checklist-completion",
+    "pluralName": "checklist-completions",
+    "displayName": "Checklist Completion",
+    "description": "Records of completed vehicle checklist inspections"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "checklist": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::checklist.checklist",
+      "inversedBy": "completions"
+    },
+    "machine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::machine.machine",
+      "inversedBy": "checklistCompletions"
+    },
+    "completedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "itemCompletions": {
+      "type": "json",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["started", "completed", "cancelled"],
+      "default": "started",
+      "required": true
+    },
+    "startedAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "completedAt": {
+      "type": "datetime"
+    },
+    "totalItems": {
+      "type": "integer",
+      "required": true
+    },
+    "completedItems": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "problemsReported": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

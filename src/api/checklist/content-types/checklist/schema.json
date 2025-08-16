@@ -5,7 +5,7 @@
     "singularName": "checklist",
     "pluralName": "checklists",
     "displayName": "Checklist",
-    "description": "Vehicle inspection and maintenance checklists"
+    "description": "Template checklists for vehicle inspections"
   },
   "options": {
     "draftAndPublish": true
@@ -28,13 +28,20 @@
       "type": "boolean",
       "default": false
     },
+    "assignedMachineTypes": {
+      "type": "json"
+    },
     "assignedMachines": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::machine.machine"
+      "target": "api::machine.machine",
+      "mappedBy": "checklists"
     },
-    "assignedMachineTypes": {
-      "type": "json"
+    "completions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::checklist-completion.checklist-completion",
+      "mappedBy": "checklist"
     },
     "created_by": {
       "type": "relation",
