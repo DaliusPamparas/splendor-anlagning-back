@@ -46,6 +46,45 @@
       "relation": "oneToMany",
       "target": "api::checklist-completion.checklist-completion",
       "mappedBy": "machine"
+    },
+    "vehicleGroup": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vehicle-group.vehicle-group",
+      "inversedBy": "machines"
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "licensePlate": {
+      "type": "string",
+      "maxLength": 20,
+      "default": ""
+    },
+    "mileageHours": {
+      "type": "integer",
+      "min": 0
+    },
+    "mileageType": {
+      "type": "enumeration",
+      "enum": ["mileage", "hours", "none"],
+      "default": "none"
+    },
+    "year": {
+      "type": "integer",
+      "min": 1900,
+      "max": 2030
+    },
+    "manufacturer": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "model": {
+      "type": "string",
+      "maxLength": 100
     }
   }
 }

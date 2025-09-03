@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vehicle_groups",
+  "info": {
+    "singularName": "vehicle-group",
+    "pluralName": "vehicle-groups",
+    "displayName": "Vehicle Group",
+    "description": "Groups for organizing vehicles by region, department, or custom categories"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "color": {
+      "type": "string",
+      "default": "#3b82f6",
+      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+    },
+    "machines": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::machine.machine",
+      "mappedBy": "vehicleGroup"
+    },
+    "created_by": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

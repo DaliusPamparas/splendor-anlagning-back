@@ -573,7 +573,30 @@ export interface ApiMachineMachine extends Schema.CollectionType {
       'oneToMany',
       'api::issue.issue'
     >;
+    licensePlate: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }> &
+      Attribute.DefaultTo<''>;
+    manufacturer: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    mileageHours: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    mileageType: Attribute.Enumeration<['mileage', 'hours', 'none']> &
+      Attribute.DefaultTo<'none'>;
+    model: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
     name: Attribute.String;
+    photo: Attribute.Media<'images'>;
     publishedAt: Attribute.DateTime;
     qrid: Attribute.String;
     status: Attribute.String;
@@ -590,6 +613,70 @@ export interface ApiMachineMachine extends Schema.CollectionType {
       'manyToMany',
       'plugin::users-permissions.user'
     >;
+    vehicleGroup: Attribute.Relation<
+      'api::machine.machine',
+      'manyToOne',
+      'api::vehicle-group.vehicle-group'
+    >;
+    year: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          max: 2030;
+          min: 1900;
+        },
+        number
+      >;
+  };
+}
+
+export interface ApiVehicleGroupVehicleGroup extends Schema.CollectionType {
+  collectionName: 'vehicle_groups';
+  info: {
+    description: 'Groups for organizing vehicles by region, department, or custom categories';
+    displayName: 'Vehicle Group';
+    pluralName: 'vehicle-groups';
+    singularName: 'vehicle-group';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    color: Attribute.String & Attribute.DefaultTo<'#3b82f6'>;
+    created_by: Attribute.Relation<
+      'api::vehicle-group.vehicle-group',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::vehicle-group.vehicle-group',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.Text &
+      Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }>;
+    machines: Attribute.Relation<
+      'api::vehicle-group.vehicle-group',
+      'oneToMany',
+      'api::machine.machine'
+    >;
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    publishedAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::vehicle-group.vehicle-group',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
   };
 }
 
@@ -1049,6 +1136,7 @@ declare module '@strapi/types' {
       'api::checklist.checklist': ApiChecklistChecklist;
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
+      'api::vehicle-group.vehicle-group': ApiVehicleGroupVehicleGroup;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
