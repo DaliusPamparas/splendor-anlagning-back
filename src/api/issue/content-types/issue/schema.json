@@ -59,6 +59,16 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "assigned_issues"
+    },
+    "sort_order": {
+      "type": "integer",
+      "default": 0,
+      "required": false
+    },
+    "manager_ordered": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 } 
