@@ -12,18 +12,38 @@ module.exports = createCoreController('api::issue.issue', ({ strapi }) => ({
    */
   async reorder(ctx) {
     try {
+      console.log('🔄 Reorder request received:', {
+        body: ctx.request.body,
+        user: ctx.state.user?.id || 'No user',
+        headers: Object.keys(ctx.headers),
+      });
+
       const { reorderedIssues } = ctx.request.body;
       const user = ctx.state.user;
 
+      // For master token requests, we might not have user context
       if (!user) {
-        return ctx.unauthorized('Authentication required');
+        console.log('⚠️ No user context - checking if master token request');
+        // If no user but we have authorization header, assume master token (manager permissions)
+        if (ctx.headers.authorization) {
+          console.log('🔑 Master token detected - proceeding with manager permissions');
+          // Create a mock manager user for the request
+          ctx.state.user = { 
+            id: 'master-token',
+            role: { type: 'manager' }
+          };
+        } else {
+          return ctx.unauthorized('Authentication required');
+        }
       }
 
       if (!reorderedIssues || !Array.isArray(reorderedIssues)) {
         return ctx.badRequest('reorderedIssues array is required');
       }
 
-      const isManager = user.role?.type === 'manager';
+      // Update user reference after potential mock user creation
+      const currentUser = ctx.state.user;
+      const isManager = currentUser.role?.type === 'manager';
 
       // Check if issues are currently manager-controlled
       const managerControlledIssues = await strapi.db.query('api::issue.issue').findMany({
@@ -81,7 +101,19 @@ module.exports = createCoreController('api::issue.issue', ({ strapi }) => ({
    */
   async resetOrder(ctx) {
     try {
-      const user = ctx.state.user;
+      console.log('🔄 Reset order request received');
+      
+      let user = ctx.state.user;
+
+      // Handle master token requests
+      if (!user && ctx.headers.authorization) {
+        console.log('🔑 Master token detected for reset - proceeding with manager permissions');
+        ctx.state.user = { 
+          id: 'master-token',
+          role: { type: 'manager' }
+        };
+        user = ctx.state.user;
+      }
 
       if (!user || user.role?.type !== 'manager') {
         return ctx.forbidden('Only managers can reset ordering');

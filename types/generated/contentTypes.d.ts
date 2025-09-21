@@ -513,11 +513,13 @@ export interface ApiIssueIssue extends Schema.CollectionType {
       'manyToOne',
       'api::machine.machine'
     >;
+    manager_ordered: Attribute.Boolean & Attribute.DefaultTo<false>;
     priority: Attribute.Enumeration<['L\u00E5g', 'Medium', 'Kritisk']> &
       Attribute.Required &
       Attribute.DefaultTo<'Medium'>;
     publishedAt: Attribute.DateTime;
     solution: Attribute.Text;
+    sort_order: Attribute.Integer & Attribute.DefaultTo<0>;
     status: Attribute.Enumeration<
       ['\u00D6ppen', 'P\u00E5g\u00E5ende', 'L\u00F6st']
     > &
