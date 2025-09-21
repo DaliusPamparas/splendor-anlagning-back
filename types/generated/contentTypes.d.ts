@@ -513,9 +513,7 @@ export interface ApiIssueIssue extends Schema.CollectionType {
       'manyToOne',
       'api::machine.machine'
     >;
-    priority: Attribute.Enumeration<
-      ['L\u00E5g', 'Medium', 'H\u00F6g', 'Kritisk']
-    > &
+    priority: Attribute.Enumeration<['L\u00E5g', 'Medium', 'Kritisk']> &
       Attribute.Required &
       Attribute.DefaultTo<'Medium'>;
     publishedAt: Attribute.DateTime;

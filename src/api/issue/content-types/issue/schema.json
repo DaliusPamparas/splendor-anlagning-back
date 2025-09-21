@@ -29,7 +29,7 @@
     },
     "priority": {
       "type": "enumeration",
-      "enum": ["Låg", "Medium", "Hög", "Kritisk"],
+      "enum": ["Låg", "Medium", "Kritisk"],
       "default": "Medium",
       "required": true
     },
