@@ -1,0 +1,25 @@
+# Nixpacks configuration for Strapi backend deployment
+# This ensures Node.js 20 is used instead of the default Node.js 18
+
+[variables]
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "yarn-1_x"]
+nixLibs = ["gcc-unwrapped"]
+nixOverlays = ["https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"]
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = ["yarn install --check-cache"]
+cacheDirectories = ["/usr/local/share/.cache/yarn/v6"]
+paths = ["/app/node_modules/.bin"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["yarn run build"]
+cacheDirectories = ["node_modules/.cache"]
+
+[start]
+cmd = "yarn run start"
