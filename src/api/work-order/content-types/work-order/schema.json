@@ -1,0 +1,154 @@
+{
+  "kind": "collectionType",
+  "collectionName": "work_orders",
+  "info": {
+    "singularName": "work-order",
+    "pluralName": "work-orders",
+    "displayName": "Work Order",
+    "description": "Work orders for maintenance and repair tasks"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "assigned",
+        "in_progress",
+        "parts_needed",
+        "completed",
+        "awaiting_approval"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high", "urgent"],
+      "default": "medium",
+      "required": true
+    },
+    "calculatedPriority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high", "urgent"]
+    },
+    "userRequestedPriority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high", "urgent"]
+    },
+    "priorityFactors": {
+      "type": "json",
+      "required": false
+    },
+    "estimatedHours": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "actualHours": {
+      "type": "decimal",
+      "default": 0
+    },
+    "laborCost": {
+      "type": "decimal",
+      "default": 0
+    },
+    "totalCost": {
+      "type": "decimal",
+      "default": 0
+    },
+    "estimatedCost": {
+      "type": "decimal",
+      "default": 0
+    },
+    "parts": {
+      "type": "json",
+      "required": false
+    },
+    "notes": {
+      "type": "json",
+      "required": false
+    },
+    "receipts": {
+      "type": "json",
+      "required": false
+    },
+    "notifications": {
+      "type": "json",
+      "required": false
+    },
+    "autoAssigned": {
+      "type": "boolean",
+      "default": false
+    },
+    "requiresApproval": {
+      "type": "boolean",
+      "default": false
+    },
+    "approvedBy": {
+      "type": "string"
+    },
+    "approvedAt": {
+      "type": "datetime"
+    },
+    "completedAt": {
+      "type": "datetime"
+    },
+    "specialization": {
+      "type": "string"
+    },
+    "mechanicType": {
+      "type": "enumeration",
+      "enum": ["internal", "external"],
+      "default": "internal"
+    },
+    "mechanicCompany": {
+      "type": "string"
+    },
+    "mechanicHourlyRate": {
+      "type": "decimal"
+    },
+    "issue": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::issue.issue",
+      "inversedBy": "work_orders"
+    },
+    "machine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::machine.machine",
+      "inversedBy": "work_orders"
+    },
+    "assigned_to": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "assigned_work_orders"
+    },
+    "created_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "created_work_orders"
+    },
+    "approved_by_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
+

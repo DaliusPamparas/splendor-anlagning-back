@@ -69,6 +69,12 @@
       "type": "boolean",
       "default": false,
       "required": false
+    },
+    "work_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work-order.work-order",
+      "mappedBy": "issue"
     }
   }
 } 

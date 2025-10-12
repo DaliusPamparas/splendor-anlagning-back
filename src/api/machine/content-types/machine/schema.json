@@ -85,6 +85,12 @@
     "model": {
       "type": "string",
       "maxLength": 100
+    },
+    "work_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work-order.work-order",
+      "mappedBy": "machine"
     }
   }
 }

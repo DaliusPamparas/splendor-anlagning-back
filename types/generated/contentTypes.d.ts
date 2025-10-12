@@ -537,6 +537,11 @@ export interface ApiIssueIssue extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+    work_orders: Attribute.Relation<
+      'api::issue.issue',
+      'oneToMany',
+      'api::work-order.work-order'
+    >;
   };
 }
 
@@ -618,6 +623,11 @@ export interface ApiMachineMachine extends Schema.CollectionType {
       'manyToOne',
       'api::vehicle-group.vehicle-group'
     >;
+    work_orders: Attribute.Relation<
+      'api::machine.machine',
+      'oneToMany',
+      'api::work-order.work-order'
+    >;
     year: Attribute.Integer &
       Attribute.SetMinMax<
         {
@@ -677,6 +687,110 @@ export interface ApiVehicleGroupVehicleGroup extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+  };
+}
+
+export interface ApiWorkOrderWorkOrder extends Schema.CollectionType {
+  collectionName: 'work_orders';
+  info: {
+    description: 'Work orders for maintenance and repair tasks';
+    displayName: 'Work Order';
+    pluralName: 'work-orders';
+    singularName: 'work-order';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    actualHours: Attribute.Decimal & Attribute.DefaultTo<0>;
+    approved_by_user: Attribute.Relation<
+      'api::work-order.work-order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    approvedAt: Attribute.DateTime;
+    approvedBy: Attribute.String;
+    assigned_to: Attribute.Relation<
+      'api::work-order.work-order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    autoAssigned: Attribute.Boolean & Attribute.DefaultTo<false>;
+    calculatedPriority: Attribute.Enumeration<
+      ['low', 'medium', 'high', 'urgent']
+    >;
+    completedAt: Attribute.DateTime;
+    created_by: Attribute.Relation<
+      'api::work-order.work-order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::work-order.work-order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.Text & Attribute.Required;
+    estimatedCost: Attribute.Decimal & Attribute.DefaultTo<0>;
+    estimatedHours: Attribute.Decimal &
+      Attribute.Required &
+      Attribute.DefaultTo<0>;
+    issue: Attribute.Relation<
+      'api::work-order.work-order',
+      'manyToOne',
+      'api::issue.issue'
+    >;
+    laborCost: Attribute.Decimal & Attribute.DefaultTo<0>;
+    machine: Attribute.Relation<
+      'api::work-order.work-order',
+      'manyToOne',
+      'api::machine.machine'
+    >;
+    mechanicCompany: Attribute.String;
+    mechanicHourlyRate: Attribute.Decimal;
+    mechanicType: Attribute.Enumeration<['internal', 'external']> &
+      Attribute.DefaultTo<'internal'>;
+    notes: Attribute.JSON;
+    notifications: Attribute.JSON;
+    parts: Attribute.JSON;
+    priority: Attribute.Enumeration<['low', 'medium', 'high', 'urgent']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'medium'>;
+    priorityFactors: Attribute.JSON;
+    publishedAt: Attribute.DateTime;
+    receipts: Attribute.JSON;
+    requiresApproval: Attribute.Boolean & Attribute.DefaultTo<false>;
+    specialization: Attribute.String;
+    status: Attribute.Enumeration<
+      [
+        'pending',
+        'assigned',
+        'in_progress',
+        'parts_needed',
+        'completed',
+        'awaiting_approval'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'pending'>;
+    title: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    totalCost: Attribute.Decimal & Attribute.DefaultTo<0>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::work-order.work-order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    userRequestedPriority: Attribute.Enumeration<
+      ['low', 'medium', 'high', 'urgent']
+    >;
   };
 }
 
@@ -1068,6 +1182,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::issue.issue'
     >;
+    assigned_work_orders: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::work-order.work-order'
+    >;
     blocked: Attribute.Boolean & Attribute.DefaultTo<false>;
     confirmationToken: Attribute.String & Attribute.Private;
     confirmed: Attribute.Boolean & Attribute.DefaultTo<false>;
@@ -1075,6 +1194,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToMany',
       'api::issue.issue'
+    >;
+    created_work_orders: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::work-order.work-order'
     >;
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1137,6 +1261,7 @@ declare module '@strapi/types' {
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
       'api::vehicle-group.vehicle-group': ApiVehicleGroupVehicleGroup;
+      'api::work-order.work-order': ApiWorkOrderWorkOrder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

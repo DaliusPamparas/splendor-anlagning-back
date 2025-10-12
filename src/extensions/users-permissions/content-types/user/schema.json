@@ -87,6 +87,18 @@
     "language": {
       "type": "string",
       "default": "sv"
+    },
+    "created_work_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work-order.work-order",
+      "mappedBy": "created_by"
+    },
+    "assigned_work_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work-order.work-order",
+      "mappedBy": "assigned_to"
     }
   }
 }
