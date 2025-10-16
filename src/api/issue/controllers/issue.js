@@ -611,12 +611,22 @@ module.exports = createCoreController('api::issue.issue', ({ strapi }) => ({
 
       // Calculate actual costs
       const partsCost = actualParts.reduce((sum, part) => sum + (part.cost * (part.quantity || 1)), 0);
-      const laborCost = actualLaborCost || (actualHours * (issue.estimated_labor_cost / issue.estimated_hours));
+      
+      // Calculate labor cost - use provided cost or calculate from estimated hourly rate
+      let laborCost = actualLaborCost;
+      if (!laborCost && issue.estimated_hours && issue.estimated_hours > 0 && issue.estimated_labor_cost) {
+        const hourlyRate = issue.estimated_labor_cost / issue.estimated_hours;
+        laborCost = actualHours * hourlyRate;
+      } else if (!laborCost) {
+        // Fallback to a default or 0 if no estimates exist
+        laborCost = 0;
+      }
+      
       const totalCost = laborCost + partsCost;
 
-      // Calculate variances
-      const costVariance = totalCost - issue.estimated_total_cost;
-      const timeVariance = actualHours - issue.estimated_hours;
+      // Calculate variances - handle missing estimates
+      const costVariance = issue.estimated_total_cost ? totalCost - issue.estimated_total_cost : 0;
+      const timeVariance = issue.estimated_hours ? actualHours - issue.estimated_hours : 0;
 
       // Update issue
       const updatedIssue = await strapi.entityService.update('api::issue.issue', id, {
