@@ -489,11 +489,30 @@ export interface ApiIssueIssue extends Schema.CollectionType {
   };
   attributes: {
     actual_hours: Attribute.Decimal;
+    actual_labor_cost: Attribute.Decimal;
+    actual_parts: Attribute.JSON;
+    actual_total_cost: Attribute.Decimal;
+    approval_notes: Attribute.Text;
+    approval_status: Attribute.Enumeration<
+      ['pending', 'approved', 'rejected', 'auto_approved']
+    >;
+    approved_at: Attribute.DateTime;
+    approved_by: Attribute.Relation<
+      'api::issue.issue',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    assigned_mechanic: Attribute.Relation<
+      'api::issue.issue',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     assigned_to: Attribute.Relation<
       'api::issue.issue',
       'manyToMany',
       'plugin::users-permissions.user'
     >;
+    cost_variance: Attribute.Decimal;
     created_by: Attribute.Relation<
       'api::issue.issue',
       'manyToOne',
@@ -507,24 +526,41 @@ export interface ApiIssueIssue extends Schema.CollectionType {
     > &
       Attribute.Private;
     description: Attribute.Text & Attribute.Required;
+    diagnosed_problem: Attribute.Text;
     estimated_hours: Attribute.Decimal;
+    estimated_labor_cost: Attribute.Decimal;
+    estimated_parts: Attribute.JSON;
+    estimated_total_cost: Attribute.Decimal;
     machine: Attribute.Relation<
       'api::issue.issue',
       'manyToOne',
       'api::machine.machine'
     >;
     manager_ordered: Attribute.Boolean & Attribute.DefaultTo<false>;
-    priority: Attribute.Enumeration<['L\u00E5g', 'Medium', 'Kritisk']> &
+    priority: Attribute.Enumeration<['low', 'medium', 'high', 'critical']> &
       Attribute.Required &
-      Attribute.DefaultTo<'Medium'>;
+      Attribute.DefaultTo<'medium'>;
     publishedAt: Attribute.DateTime;
+    rejection_reason: Attribute.Text;
+    requires_approval: Attribute.Boolean & Attribute.DefaultTo<false>;
     solution: Attribute.Text;
     sort_order: Attribute.Integer & Attribute.DefaultTo<0>;
     status: Attribute.Enumeration<
-      ['\u00D6ppen', 'P\u00E5g\u00E5ende', 'L\u00F6st']
+      [
+        'reported',
+        'assessed',
+        'pending_approval',
+        'approved',
+        'in_progress',
+        'completed',
+        'closed',
+        'rejected',
+        'cancelled'
+      ]
     > &
       Attribute.Required &
-      Attribute.DefaultTo<'\u00D6ppen'>;
+      Attribute.DefaultTo<'reported'>;
+    time_variance: Attribute.Decimal;
     title: Attribute.String &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
@@ -537,11 +573,21 @@ export interface ApiIssueIssue extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+    valuation_added_at: Attribute.DateTime;
+    valuation_added_by: Attribute.Relation<
+      'api::issue.issue',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    variance_explanation: Attribute.Text;
+    work_completed_at: Attribute.DateTime;
+    work_notes: Attribute.JSON;
     work_orders: Attribute.Relation<
       'api::issue.issue',
       'oneToMany',
       'api::work-order.work-order'
     >;
+    work_started_at: Attribute.DateTime;
   };
 }
 
@@ -636,6 +682,53 @@ export interface ApiMachineMachine extends Schema.CollectionType {
         },
         number
       >;
+  };
+}
+
+export interface ApiSystemSettingSystemSetting extends Schema.SingleType {
+  collectionName: 'system_settings';
+  info: {
+    description: 'Global system settings for approval thresholds and defaults';
+    displayName: 'System Settings';
+    pluralName: 'system-settings';
+    singularName: 'system-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    allow_emergency_override: Attribute.Boolean & Attribute.DefaultTo<true>;
+    allow_multiple_mechanics: Attribute.Boolean & Attribute.DefaultTo<false>;
+    approval_threshold: Attribute.Decimal &
+      Attribute.Required &
+      Attribute.DefaultTo<5000>;
+    approval_threshold_currency: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'SEK'>;
+    auto_approve_under_threshold: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<true>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::system-setting.system-setting',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    currency: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'SEK'>;
+    default_mechanic_hourly_rate: Attribute.Decimal &
+      Attribute.Required &
+      Attribute.DefaultTo<1000>;
+    require_photos_for_issues: Attribute.Boolean & Attribute.DefaultTo<false>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::system-setting.system-setting',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
   };
 }
 
@@ -1260,6 +1353,7 @@ declare module '@strapi/types' {
       'api::checklist.checklist': ApiChecklistChecklist;
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
+      'api::system-setting.system-setting': ApiSystemSettingSystemSetting;
       'api::vehicle-group.vehicle-group': ApiVehicleGroupVehicleGroup;
       'api::work-order.work-order': ApiWorkOrderWorkOrder;
       'plugin::content-releases.release': PluginContentReleasesRelease;

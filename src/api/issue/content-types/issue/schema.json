@@ -23,24 +23,18 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": ["Öppen", "Pågående", "Löst"],
-      "default": "Öppen",
+      "enum": ["reported", "assessed", "pending_approval", "approved", "in_progress", "completed", "closed", "rejected", "cancelled"],
+      "default": "reported",
       "required": true
     },
     "priority": {
       "type": "enumeration",
-      "enum": ["Låg", "Medium", "Kritisk"],
-      "default": "Medium",
+      "enum": ["low", "medium", "high", "critical"],
+      "default": "medium",
       "required": true
     },
     "solution": {
       "type": "text"
-    },
-    "estimated_hours": {
-      "type": "decimal"
-    },
-    "actual_hours": {
-      "type": "decimal"
     },
     "machine": {
       "type": "relation",
@@ -75,6 +69,86 @@
       "relation": "oneToMany",
       "target": "api::work-order.work-order",
       "mappedBy": "issue"
+    },
+    "valuation_added_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "valuation_added_at": {
+      "type": "datetime"
+    },
+    "diagnosed_problem": {
+      "type": "text"
+    },
+    "estimated_hours": {
+      "type": "decimal"
+    },
+    "estimated_labor_cost": {
+      "type": "decimal"
+    },
+    "estimated_parts": {
+      "type": "json"
+    },
+    "estimated_total_cost": {
+      "type": "decimal"
+    },
+    "assigned_mechanic": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "default": false
+    },
+    "approval_status": {
+      "type": "enumeration",
+      "enum": ["pending", "approved", "rejected", "auto_approved"]
+    },
+    "approved_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "approved_at": {
+      "type": "datetime"
+    },
+    "approval_notes": {
+      "type": "text"
+    },
+    "rejection_reason": {
+      "type": "text"
+    },
+    "work_started_at": {
+      "type": "datetime"
+    },
+    "work_completed_at": {
+      "type": "datetime"
+    },
+    "actual_hours": {
+      "type": "decimal"
+    },
+    "actual_labor_cost": {
+      "type": "decimal"
+    },
+    "actual_parts": {
+      "type": "json"
+    },
+    "actual_total_cost": {
+      "type": "decimal"
+    },
+    "work_notes": {
+      "type": "json"
+    },
+    "cost_variance": {
+      "type": "decimal"
+    },
+    "time_variance": {
+      "type": "decimal"
+    },
+    "variance_explanation": {
+      "type": "text"
     }
   }
 } 

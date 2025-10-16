@@ -1,0 +1,54 @@
+{
+  "kind": "singleType",
+  "collectionName": "system_settings",
+  "info": {
+    "singularName": "system-setting",
+    "pluralName": "system-settings",
+    "displayName": "System Settings",
+    "description": "Global system settings for approval thresholds and defaults"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "approval_threshold": {
+      "type": "decimal",
+      "default": 5000,
+      "required": true
+    },
+    "approval_threshold_currency": {
+      "type": "string",
+      "default": "SEK",
+      "required": true
+    },
+    "auto_approve_under_threshold": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "default_mechanic_hourly_rate": {
+      "type": "decimal",
+      "default": 1000,
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "default": "SEK",
+      "required": true
+    },
+    "require_photos_for_issues": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_multiple_mechanics": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_emergency_override": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+
