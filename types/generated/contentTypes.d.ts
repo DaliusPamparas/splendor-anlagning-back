@@ -624,6 +624,11 @@ export interface ApiMachineMachine extends Schema.CollectionType {
         maxLength: 20;
       }> &
       Attribute.DefaultTo<''>;
+    maintenance_orders: Attribute.Relation<
+      'api::machine.machine',
+      'oneToMany',
+      'api::maintenanceorder.maintenanceorder'
+    >;
     manufacturer: Attribute.String &
       Attribute.SetMinMaxLength<{
         maxLength: 100;
@@ -672,6 +677,151 @@ export interface ApiMachineMachine extends Schema.CollectionType {
         },
         number
       >;
+  };
+}
+
+export interface ApiMaintenanceorderMaintenanceorder
+  extends Schema.CollectionType {
+  collectionName: 'maintenance_orders';
+  info: {
+    description: 'Scheduled preventive maintenance for machines';
+    displayName: 'Maintenance Order';
+    pluralName: 'maintenanceorders';
+    singularName: 'maintenanceorder';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_to: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    completed_at: Attribute.DateTime;
+    completed_by: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    created_issue: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'oneToOne',
+      'api::issue.issue'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    current_hours: Attribute.Decimal;
+    current_mileage_km: Attribute.Integer;
+    due_date: Attribute.DateTime;
+    last_performed_at: Attribute.DateTime;
+    machine: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'manyToOne',
+      'api::machine.machine'
+    > &
+      Attribute.Required;
+    next_due_hours: Attribute.Decimal;
+    next_due_km: Attribute.Integer;
+    notes: Attribute.JSON & Attribute.DefaultTo<[]>;
+    priority: Attribute.Enumeration<['low', 'medium', 'high', 'critical']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'medium'>;
+    priority_score: Attribute.JSON;
+    scheduled_at: Attribute.DateTime;
+    status: Attribute.Enumeration<
+      [
+        'planned',
+        'scheduled',
+        'in_progress',
+        'completed',
+        'cancelled',
+        'overdue'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'planned'>;
+    tasks: Attribute.JSON & Attribute.Required;
+    template: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'manyToOne',
+      'api::maintenancetemplate.maintenancetemplate'
+    >;
+    template_name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::maintenanceorder.maintenanceorder',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiMaintenancetemplateMaintenancetemplate
+  extends Schema.CollectionType {
+  collectionName: 'maintenance_templates';
+  info: {
+    description: 'Reusable maintenance templates for scheduled preventive maintenance';
+    displayName: 'Maintenance Template';
+    pluralName: 'maintenancetemplates';
+    singularName: 'maintenancetemplate';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    category: Attribute.Enumeration<
+      [
+        'oil',
+        'inspection',
+        'hydraulic',
+        'tires',
+        'coolant',
+        'filters',
+        'brakes',
+        'general'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.DefaultTo<'general'>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::maintenancetemplate.maintenancetemplate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    default_tasks: Attribute.JSON & Attribute.Required;
+    description: Attribute.Text;
+    interval: Attribute.JSON & Attribute.Required;
+    is_active: Attribute.Boolean & Attribute.DefaultTo<true>;
+    maintenance_orders: Attribute.Relation<
+      'api::maintenancetemplate.maintenancetemplate',
+      'oneToMany',
+      'api::maintenanceorder.maintenanceorder'
+    >;
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::maintenancetemplate.maintenancetemplate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
   };
 }
 
@@ -1229,6 +1379,8 @@ declare module '@strapi/types' {
       'api::checklist.checklist': ApiChecklistChecklist;
       'api::issue.issue': ApiIssueIssue;
       'api::machine.machine': ApiMachineMachine;
+      'api::maintenanceorder.maintenanceorder': ApiMaintenanceorderMaintenanceorder;
+      'api::maintenancetemplate.maintenancetemplate': ApiMaintenancetemplateMaintenancetemplate;
       'api::system-setting.system-setting': ApiSystemSettingSystemSetting;
       'api::vehicle-group.vehicle-group': ApiVehicleGroupVehicleGroup;
       'plugin::content-releases.release': PluginContentReleasesRelease;

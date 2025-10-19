@@ -1,0 +1,96 @@
+{
+  "kind": "collectionType",
+  "collectionName": "maintenance_orders",
+  "info": {
+    "singularName": "maintenanceorder",
+    "pluralName": "maintenanceorders",
+    "displayName": "Maintenance Order",
+    "description": "Scheduled preventive maintenance for machines"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::maintenancetemplate.maintenancetemplate",
+      "inversedBy": "maintenance_orders"
+    },
+    "template_name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "machine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::machine.machine",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["planned", "scheduled", "in_progress", "completed", "cancelled", "overdue"],
+      "required": true,
+      "default": "planned"
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high", "critical"],
+      "required": true,
+      "default": "medium"
+    },
+    "due_date": {
+      "type": "datetime"
+    },
+    "scheduled_at": {
+      "type": "datetime"
+    },
+    "last_performed_at": {
+      "type": "datetime"
+    },
+    "completed_at": {
+      "type": "datetime"
+    },
+    "current_mileage_km": {
+      "type": "integer"
+    },
+    "current_hours": {
+      "type": "decimal"
+    },
+    "next_due_km": {
+      "type": "integer"
+    },
+    "next_due_hours": {
+      "type": "decimal"
+    },
+    "tasks": {
+      "type": "json",
+      "required": true
+    },
+    "priority_score": {
+      "type": "json"
+    },
+    "notes": {
+      "type": "json",
+      "default": []
+    },
+    "assigned_to": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "completed_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "created_issue": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::issue.issue"
+    }
+  }
+}
+

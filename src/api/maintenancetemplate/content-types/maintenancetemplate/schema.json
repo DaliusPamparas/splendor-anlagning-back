@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "maintenance_templates",
+  "info": {
+    "singularName": "maintenancetemplate",
+    "pluralName": "maintenancetemplates",
+    "displayName": "Maintenance Template",
+    "description": "Reusable maintenance templates for scheduled preventive maintenance"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["oil", "inspection", "hydraulic", "tires", "coolant", "filters", "brakes", "general"],
+      "required": true,
+      "default": "general"
+    },
+    "interval": {
+      "type": "json",
+      "required": true
+    },
+    "default_tasks": {
+      "type": "json",
+      "required": true
+    },
+    "maintenance_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::maintenanceorder.maintenanceorder",
+      "mappedBy": "template"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "required": false
+    }
+  }
+}
+

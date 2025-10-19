@@ -85,6 +85,12 @@
     "model": {
       "type": "string",
       "maxLength": 100
+    },
+    "maintenance_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::maintenanceorder.maintenanceorder",
+      "mappedBy": "machine"
     }
   }
 }
