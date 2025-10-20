@@ -126,7 +126,7 @@ async function seedTemplates() {
 
   for (const template of templates) {
     try {
-      const response = await fetch(`${STRAPI_URL}/api/maintenance-templates`, {
+      const response = await fetch(`${STRAPI_URL}/api/maintenancetemplates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
